@@ -11,7 +11,7 @@ module Legion
           PHASE_MAP = {
             sensory_processing:         nil,
             emotional_evaluation:       { ext: :Emotion,    runner: :Valence,       fn: :evaluate_valence },
-            memory_retrieval:           { ext: :Memory,     runner: :Traces,        fn: :retrieve_ranked },
+            memory_retrieval:           { ext: :Memory,     runner: :Traces,        fn: :retrieve_and_reinforce },
             identity_entropy_check:     { ext: :Identity,   runner: :Identity,      fn: :check_entropy },
             working_memory_integration: nil,
             procedural_check:           { ext: :Coldstart,  runner: :Coldstart,     fn: :coldstart_progress },
