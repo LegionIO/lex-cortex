@@ -47,9 +47,9 @@ spec/
 
 `Helpers::Wiring::PHASE_MAP` maps each tick phase to an extension runner method. At startup, cortex discovers which extensions are loaded via `const_defined?` checks and builds a `phase_handlers` hash that `lex-tick`'s `execute_tick` consumes.
 
-16 phases mapped (3 are nil/future):
-- **Active tick**: sensory_processing, emotional_evaluation, memory_retrieval, identity_entropy_check, working_memory_integration, procedural_check, prediction_engine, mesh_interface, gut_instinct, action_selection, memory_consolidation
-- **Dream cycle**: memory_audit, association_walk, contradiction_resolution, agenda_formation, consolidation_commit
+19 phases mapped:
+- **Active tick** (12 phases): sensory_processing (`Attention:filter_signals`), emotional_evaluation (`Emotion:Valence:evaluate_valence`), memory_retrieval (`Memory:Traces:retrieve_and_reinforce`), identity_entropy_check (`Identity:Identity:check_entropy`), working_memory_integration (`Curiosity:detect_gaps`), procedural_check (`Coldstart:coldstart_progress`), prediction_engine (`Prediction:predict`), mesh_interface (`Mesh:mesh_status`), gut_instinct (`Emotion:Gut:gut_instinct`), action_selection (`Volition:form_intentions`), memory_consolidation (`Memory:Consolidation:decay_cycle`), post_tick_reflection (`Reflection:reflect`)
+- **Dream cycle** (7 phases): memory_audit, association_walk, contradiction_resolution, agenda_formation (`Curiosity:form_agenda`), consolidation_commit, dream_reflection (`Reflection:reflect`), dream_narration (`Narrator:narrate`)
 
 ### RunnerHost Pattern
 
@@ -86,14 +86,18 @@ The tick actor checks `!Legion::Extensions.const_defined?(:Cortex)` in `enabled?
 
 Cortex wires these extensions when available:
 - **lex-tick**: Orchestrator (core dependency — cortex cannot function without it)
+- **lex-attention**: Sensory signal filtering (`sensory_processing` phase)
 - **lex-emotion**: Valence evaluation + gut instinct
-- **lex-memory**: Trace retrieval, decay cycle, Hebbian linking, tier migration
+- **lex-memory**: Trace retrieval+reinforce, decay cycle, Hebbian linking, tier migration
 - **lex-identity**: Entropy anomaly detection
+- **lex-curiosity**: Working memory integration + dream agenda formation
 - **lex-coldstart**: Bootstrap progress check
 - **lex-prediction**: Forward-model prediction
 - **lex-mesh**: Agent mesh status
-- **lex-consent**: Action consent check
-- **lex-conflict**: Active conflict resolution
+- **lex-volition**: Action intention formation (`action_selection` phase)
+- **lex-reflection**: Post-tick and dream reflection (`post_tick_reflection`, `dream_reflection` phases)
+- **lex-narrator**: Dream narration (`dream_narration` phase)
+- **lex-conflict**: Dream contradiction resolution
 
 All are optional — missing extensions result in `{ status: :no_handler }` for their phases.
 

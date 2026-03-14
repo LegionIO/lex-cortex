@@ -23,20 +23,34 @@ When cortex is loaded, the standalone tick actor automatically disables itself.
 
 ### Wired Phases
 
+Active tick phases (12):
+
 | Phase | Extension | Runner Method |
 |-------|-----------|---------------|
+| `sensory_processing` | lex-attention | `filter_signals` |
 | `emotional_evaluation` | lex-emotion | `evaluate_valence` |
-| `memory_retrieval` | lex-memory | `retrieve_ranked` |
+| `memory_retrieval` | lex-memory | `retrieve_and_reinforce` |
 | `identity_entropy_check` | lex-identity | `check_entropy` |
+| `working_memory_integration` | lex-curiosity | `detect_gaps` |
 | `procedural_check` | lex-coldstart | `coldstart_progress` |
 | `prediction_engine` | lex-prediction | `predict` |
 | `mesh_interface` | lex-mesh | `mesh_status` |
 | `gut_instinct` | lex-emotion | `gut_instinct` |
-| `action_selection` | lex-consent | `check_consent` |
+| `action_selection` | lex-volition | `form_intentions` |
 | `memory_consolidation` | lex-memory | `decay_cycle` |
+| `post_tick_reflection` | lex-reflection | `reflect` |
+
+Dream cycle phases (7):
+
+| Phase | Extension | Runner Method |
+|-------|-----------|---------------|
+| `memory_audit` | lex-memory | `retrieve_ranked` |
 | `association_walk` | lex-memory | `hebbian_link` |
 | `contradiction_resolution` | lex-conflict | `active_conflicts` |
+| `agenda_formation` | lex-curiosity | `form_agenda` |
 | `consolidation_commit` | lex-memory | `migrate_tier` |
+| `dream_reflection` | lex-reflection | `reflect` |
+| `dream_narration` | lex-narrator | `narrate` |
 
 All extensions are optional. Missing extensions result in `{ status: :no_handler }` for their phases.
 
