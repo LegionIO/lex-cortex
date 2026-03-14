@@ -9,47 +9,56 @@ module Legion
           # Each entry: { ext: ModuleName, runner: RunnerModule, fn: :method_name }
           # nil entries are intentionally unwired (future or handled inline).
           PHASE_MAP = {
-            sensory_processing:         nil,
+            sensory_processing:         { ext: :Attention, runner: :Attention, fn: :filter_signals },
             emotional_evaluation:       { ext: :Emotion,    runner: :Valence,       fn: :evaluate_valence },
             memory_retrieval:           { ext: :Memory,     runner: :Traces,        fn: :retrieve_and_reinforce },
             identity_entropy_check:     { ext: :Identity,   runner: :Identity,      fn: :check_entropy },
-            working_memory_integration: nil,
+            working_memory_integration: { ext: :Curiosity, runner: :Curiosity, fn: :detect_gaps },
             procedural_check:           { ext: :Coldstart,  runner: :Coldstart,     fn: :coldstart_progress },
             prediction_engine:          { ext: :Prediction, runner: :Prediction,    fn: :predict },
             mesh_interface:             { ext: :Mesh,       runner: :Mesh,          fn: :mesh_status },
             gut_instinct:               { ext: :Emotion,    runner: :Gut,           fn: :gut_instinct },
-            action_selection:           { ext: :Consent,    runner: :Consent,       fn: :check_consent },
+            action_selection:           { ext: :Volition, runner: :Volition, fn: :form_intentions },
             memory_consolidation:       { ext: :Memory,     runner: :Consolidation, fn: :decay_cycle },
+            post_tick_reflection:       { ext: :Reflection, runner: :Reflection,    fn: :reflect },
 
             # Dream cycle phases
             memory_audit:               { ext: :Memory,     runner: :Traces,        fn: :retrieve_ranked },
             association_walk:           { ext: :Memory,     runner: :Consolidation, fn: :hebbian_link },
             contradiction_resolution:   { ext: :Conflict,   runner: :Conflict,      fn: :active_conflicts },
-            agenda_formation:           nil,
-            consolidation_commit:       { ext: :Memory, runner: :Consolidation, fn: :migrate_tier }
+            agenda_formation:           { ext: :Curiosity, runner: :Curiosity, fn: :form_agenda },
+            consolidation_commit:       { ext: :Memory, runner: :Consolidation, fn: :migrate_tier },
+            dream_reflection:           { ext: :Reflection, runner: :Reflection, fn: :reflect },
+            dream_narration:            { ext: :Narrator, runner: :Narrator, fn: :narrate }
           }.freeze
 
           # Phase-specific argument builders.
           # Each proc receives the cortex context and returns kwargs for the runner method.
           PHASE_ARGS = {
-            emotional_evaluation:     ->(ctx) { { signal: ctx[:current_signal] || {}, source_type: :ambient } },
-            memory_retrieval:         ->(_ctx) { { limit: 10 } },
-            identity_entropy_check:   ->(_ctx) { {} },
-            procedural_check:         ->(_ctx) { {} },
-            prediction_engine:        ->(ctx) { { mode: :functional_mapping, context: ctx[:prior_results] || {} } },
-            mesh_interface:           ->(_ctx) { {} },
-            gut_instinct:             ->(ctx) { { valences: ctx[:valences] || [] } },
-            action_selection:         ->(_ctx) { { domain: :general } },
-            memory_consolidation:     ->(_ctx) { {} },
-            memory_audit:             ->(_ctx) { { limit: 20 } },
-            association_walk:         lambda { |ctx|
+            sensory_processing:         ->(ctx) { { signals: ctx[:signals] || [], active_wonders: ctx.dig(:prior_results, :agenda_formation, :agenda) || [] } },
+            emotional_evaluation:       ->(ctx) { { signal: ctx[:current_signal] || {}, source_type: :ambient } },
+            memory_retrieval:           ->(_ctx) { { limit: 10 } },
+            identity_entropy_check:     ->(_ctx) { {} },
+            procedural_check:           ->(_ctx) { {} },
+            prediction_engine:          ->(ctx) { { mode: :functional_mapping, context: ctx[:prior_results] || {} } },
+            mesh_interface:             ->(_ctx) { {} },
+            gut_instinct:               ->(ctx) { { valences: ctx[:valences] || [] } },
+            action_selection:           ->(ctx) { { tick_results: ctx[:prior_results] || {}, cognitive_state: {} } },
+            working_memory_integration: ->(ctx) { { prior_results: ctx[:prior_results] || {} } },
+            memory_consolidation:       ->(_ctx) { {} },
+            post_tick_reflection:       ->(ctx) { { tick_results: ctx[:prior_results] || {} } },
+            memory_audit:               ->(_ctx) { { limit: 20 } },
+            association_walk:           lambda { |ctx|
               audit = ctx.dig(:prior_results, :memory_audit)
               traces = audit.is_a?(Hash) ? audit[:traces] : nil
               traces = [] unless traces.is_a?(Array) && traces.size >= 2
               { trace_id_a: traces.dig(0, :trace_id), trace_id_b: traces.dig(1, :trace_id) }
             },
-            contradiction_resolution: ->(_ctx) { {} },
-            consolidation_commit:     ->(_ctx) { {} }
+            contradiction_resolution:   ->(_ctx) { {} },
+            agenda_formation:           ->(_ctx) { {} },
+            consolidation_commit:       ->(_ctx) { {} },
+            dream_reflection:           ->(ctx) { { tick_results: ctx[:prior_results] || {} } },
+            dream_narration:            ->(ctx) { { tick_results: ctx[:prior_results] || {}, cognitive_state: { source: :dream } } }
           }.freeze
 
           module_function
