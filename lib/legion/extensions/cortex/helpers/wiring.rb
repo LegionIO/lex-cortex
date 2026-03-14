@@ -42,7 +42,12 @@ module Legion
             action_selection:         ->(_ctx) { { domain: :general } },
             memory_consolidation:     ->(_ctx) { {} },
             memory_audit:             ->(_ctx) { { limit: 20 } },
-            association_walk:         ->(_ctx) { { trace_id_a: nil, trace_id_b: nil } },
+            association_walk:         lambda { |ctx|
+                                       audit = ctx.dig(:prior_results, :memory_audit)
+                                       traces = audit.is_a?(Hash) ? audit[:traces] : nil
+                                       traces = traces.is_a?(Array) && traces.size >= 2 ? traces : []
+                                       { trace_id_a: traces.dig(0, :trace_id), trace_id_b: traces.dig(1, :trace_id) }
+                                     },
             contradiction_resolution: ->(_ctx) { {} },
             consolidation_commit:     ->(_ctx) { {} }
           }.freeze

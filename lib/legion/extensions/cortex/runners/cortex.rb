@@ -17,7 +17,9 @@ module Legion
             # Resolve the tick orchestrator
             tick_host = runner_instances[:Tick_Orchestrator]
             unless tick_host
-              Legion::Logging.warn '[cortex] lex-tick not available, cannot think'
+              @runner_instances = nil
+              @phase_handlers = nil
+              Legion::Logging.warn '[cortex] lex-tick not available yet, will retry next tick'
               return { error: :no_tick_extension }
             end
 
