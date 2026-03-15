@@ -20,6 +20,8 @@ module Legion
           end
 
           def run_now?
+            return false if defined?(Legion::Gaia) && Legion::Gaia.started?
+
             true
           end
 

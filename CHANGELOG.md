@@ -1,6 +1,16 @@
 # Changelog
 
-## [Unreleased]
+## [0.2.0] - 2026-03-15
+
+### Changed
+- All runner methods delegate to `Legion::Gaia` when available (deprecation shim)
+- Think actor skips execution when GAIA heartbeat is active (`run_now?` returns `false`)
+- Deprecation warnings emitted on all delegated calls
+
+### Deprecated
+- This extension is deprecated in favor of `legion-gaia`. All functionality has been absorbed into the GAIA cognitive coordination layer.
+
+## [0.1.1] - 2026-03-15
 
 ### Added
 - `spec/legion/extensions/cortex/actors/think_spec.rb` (7 examples) — tests for the Think actor (Every 1s)

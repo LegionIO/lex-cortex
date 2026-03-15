@@ -11,10 +11,11 @@ Cognitive wiring layer for the LegionIO agentic architecture. Cortex discovers l
 ## Gem Info
 
 - **Gem name**: `lex-cortex`
-- **Version**: `0.1.0`
+- **Version**: `0.2.0`
 - **Module**: `Legion::Extensions::Cortex`
 - **Ruby**: `>= 3.4`
 - **License**: MIT
+- **Status**: DEPRECATED — functionality absorbed by `legion-gaia`. This gem is a thin delegation shim.
 
 ## File Structure
 

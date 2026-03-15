@@ -9,6 +9,11 @@ module Legion
                                                       Legion::Extensions::Helpers.const_defined?(:Lex)
 
           def think(**)
+            if defined?(Legion::Gaia) && Legion::Gaia.started?
+              warn '[DEPRECATION] lex-cortex is deprecated. Use legion-gaia directly. (think)'
+              return Legion::Gaia.heartbeat
+            end
+
             signals = signal_buffer.drain
 
             # Lazy-wire on first tick or after rewire
@@ -38,6 +43,24 @@ module Legion
           end
 
           def ingest_signal(signal: {}, source_type: :ambient, salience: 0.0, **)
+            if defined?(Legion::Gaia) && Legion::Gaia.started?
+              warn '[DEPRECATION] lex-cortex is deprecated. Use legion-gaia directly. (ingest_signal)'
+              frame = Legion::Gaia::InputFrame.new(
+                id:                    SecureRandom.uuid,
+                content:               signal.is_a?(Hash) ? signal[:content] || signal.to_s : signal.to_s,
+                content_type:          :text,
+                channel_id:            :internal,
+                channel_capabilities:  {},
+                device_context:        {},
+                session_continuity_id: nil,
+                auth_context:          {},
+                metadata:              { source_type: source_type, salience: salience },
+                received_at:           Time.now.utc
+              )
+              Legion::Gaia.ingest(frame)
+              return { ingested: true, buffer_depth: Legion::Gaia.sensory_buffer&.size || 0 }
+            end
+
             normalized = signal.is_a?(Hash) ? signal : { value: signal }
             normalized[:source_type] = source_type
             normalized[:salience] = salience
@@ -48,6 +71,11 @@ module Legion
           end
 
           def cortex_status(**)
+            if defined?(Legion::Gaia) && Legion::Gaia.started?
+              warn '[DEPRECATION] lex-cortex is deprecated. Use legion-gaia directly. (cortex_status)'
+              return Legion::Gaia.status
+            end
+
             discovery = Helpers::Wiring.discover_available_extensions
             loaded = discovery.count { |_, v| v[:loaded] }
             total = discovery.size
@@ -65,6 +93,11 @@ module Legion
           end
 
           def rewire(**)
+            if defined?(Legion::Gaia) && Legion::Gaia.started?
+              warn '[DEPRECATION] lex-cortex is deprecated. Use legion-gaia directly. (rewire)'
+              return { rewired: true, delegated_to: :gaia }
+            end
+
             @runner_instances = nil
             @phase_handlers = nil
             wire_phase_handlers
