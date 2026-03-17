@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.1] - 2026-03-17
+
+### Fixed
+- Add `respond_to?(:started?)` guard before `Legion::Gaia.started?` in all four runner methods (`think`, `ingest_signal`, `cortex_status`, `rewire`) to prevent `NoMethodError` when `Legion::Gaia` is loaded but not fully initialized
+- Remove redundant `add_development_dependency 'legion-gaia'` from gemspec (already declared in Gemfile)
+
 ## [0.2.0] - 2026-03-15
 
 ### Changed

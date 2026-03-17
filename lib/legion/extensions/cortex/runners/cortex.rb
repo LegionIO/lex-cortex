@@ -9,7 +9,7 @@ module Legion
                                                       Legion::Extensions::Helpers.const_defined?(:Lex)
 
           def think(**)
-            if defined?(Legion::Gaia) && Legion::Gaia.started?
+            if defined?(Legion::Gaia) && Legion::Gaia.respond_to?(:started?) && Legion::Gaia.started?
               warn '[DEPRECATION] lex-cortex is deprecated. Use legion-gaia directly. (think)'
               return Legion::Gaia.heartbeat
             end
@@ -43,7 +43,7 @@ module Legion
           end
 
           def ingest_signal(signal: {}, source_type: :ambient, salience: 0.0, **)
-            if defined?(Legion::Gaia) && Legion::Gaia.started?
+            if defined?(Legion::Gaia) && Legion::Gaia.respond_to?(:started?) && Legion::Gaia.started?
               warn '[DEPRECATION] lex-cortex is deprecated. Use legion-gaia directly. (ingest_signal)'
               frame = Legion::Gaia::InputFrame.new(
                 id:                    SecureRandom.uuid,
@@ -71,7 +71,7 @@ module Legion
           end
 
           def cortex_status(**)
-            if defined?(Legion::Gaia) && Legion::Gaia.started?
+            if defined?(Legion::Gaia) && Legion::Gaia.respond_to?(:started?) && Legion::Gaia.started?
               warn '[DEPRECATION] lex-cortex is deprecated. Use legion-gaia directly. (cortex_status)'
               return Legion::Gaia.status
             end
@@ -93,7 +93,7 @@ module Legion
           end
 
           def rewire(**)
-            if defined?(Legion::Gaia) && Legion::Gaia.started?
+            if defined?(Legion::Gaia) && Legion::Gaia.respond_to?(:started?) && Legion::Gaia.started?
               warn '[DEPRECATION] lex-cortex is deprecated. Use legion-gaia directly. (rewire)'
               return { rewired: true, delegated_to: :gaia }
             end
