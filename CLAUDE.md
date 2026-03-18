@@ -11,7 +11,7 @@ Cognitive wiring layer for the LegionIO agentic architecture. Cortex discovers l
 ## Gem Info
 
 - **Gem name**: `lex-cortex`
-- **Version**: `0.2.0`
+- **Version**: `0.2.1`
 - **Module**: `Legion::Extensions::Cortex`
 - **Ruby**: `>= 3.4`
 - **License**: MIT
