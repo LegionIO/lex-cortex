@@ -1,5 +1,7 @@
 # lex-cortex
 
+**DEPRECATED**: This gem is a thin delegation shim. Its functionality has been absorbed by `legion-gaia`. When `legion-gaia` is loaded and started, all `lex-cortex` methods (`think`, `ingest_signal`, `cortex_status`, `rewire`) emit deprecation warnings and delegate to `legion-gaia`. For new code, use `legion-gaia` directly.
+
 Cognitive wiring layer for the [LegionIO](https://github.com/LegionIO/LegionIO) agentic architecture. Discovers loaded agentic extensions at runtime, builds phase handlers from their runners, and drives the tick cycle through [lex-tick](https://github.com/LegionIO/lex-tick).
 
 ## Installation
