@@ -8,19 +8,6 @@ RSpec.describe Legion::Extensions::Cortex::Runners::Cortex do
   end
   let(:host) { host_class.new }
 
-  before do
-    # Stub logging since Legion::Logging won't be available in test
-    stub_const('Legion::Logging', Class.new do
-      def self.debug(_msg); end
-
-      def self.info(_msg); end
-
-      def self.warn(_msg); end
-
-      def self.error(_msg); end
-    end)
-  end
-
   describe '#ingest_signal' do
     it 'adds a signal to the buffer' do
       result = host.ingest_signal(signal: { value: 'test' }, source_type: :human_direct, salience: 0.8)

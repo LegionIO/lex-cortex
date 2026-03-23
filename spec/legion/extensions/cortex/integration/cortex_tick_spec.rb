@@ -19,16 +19,6 @@ RSpec.describe 'Cortex → Tick integration' do
     Legion::Extensions.send(:remove_const, :Tick) if Legion::Extensions.const_defined?(:Tick)
   end
 
-  # Stub Legion::Logging before each example (stub_const must be per-test).
-  before do
-    stub_const('Legion::Logging', Module.new do
-      def self.debug(_msg); end
-      def self.info(_msg);  end
-      def self.warn(_msg);  end
-      def self.error(_msg); end
-    end)
-  end
-
   # Build a fresh cortex host (includes the Cortex runner module) each example.
   let(:host_class) do
     Class.new { include Legion::Extensions::Cortex::Runners::Cortex }

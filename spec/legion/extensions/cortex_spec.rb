@@ -6,6 +6,6 @@ RSpec.describe Legion::Extensions::Cortex do
   end
 
   it 'has a version string' do
-    expect(Legion::Extensions::Cortex::VERSION).to eq('0.2.1')
+    expect(Legion::Extensions::Cortex::VERSION).to eq('0.2.2')
   end
 end

@@ -24,12 +24,12 @@ module Legion
             unless tick_host
               @runner_instances = nil
               @phase_handlers = nil
-              Legion::Logging.warn '[cortex] lex-tick not available yet, will retry next tick'
+              log.warn '[cortex] lex-tick not available yet, will retry next tick'
               return { error: :no_tick_extension }
             end
 
             wired_count = @phase_handlers.size
-            Legion::Logging.debug "[cortex] think: signals=#{signals.size} wired_phases=#{wired_count}"
+            log.debug "[cortex] think: signals=#{signals.size} wired_phases=#{wired_count}"
 
             result = tick_host.execute_tick(signals: signals, phase_handlers: @phase_handlers)
 
@@ -66,7 +66,7 @@ module Legion
             normalized[:salience] = salience
 
             signal_buffer.push(normalized)
-            Legion::Logging.debug "[cortex] signal ingested: source=#{source_type} salience=#{salience} buffer=#{signal_buffer.size}"
+            log.debug "[cortex] signal ingested: source=#{source_type} salience=#{salience} buffer=#{signal_buffer.size}"
             { ingested: true, buffer_depth: signal_buffer.size }
           end
 
@@ -81,7 +81,7 @@ module Legion
             total = discovery.size
             wired = @phase_handlers&.size || 0
 
-            Legion::Logging.debug "[cortex] status: extensions=#{loaded}/#{total} wired_phases=#{wired} buffer=#{signal_buffer.size}"
+            log.debug "[cortex] status: extensions=#{loaded}/#{total} wired_phases=#{wired} buffer=#{signal_buffer.size}"
             {
               extensions_available: loaded,
               extensions_total:     total,
@@ -103,7 +103,7 @@ module Legion
             wire_phase_handlers
 
             wired = @phase_handlers.size
-            Legion::Logging.info "[cortex] rewired: #{wired} phases connected"
+            log.info "[cortex] rewired: #{wired} phases connected"
             { rewired: true, wired_phases: wired, phase_list: @phase_handlers.keys }
           end
 
@@ -134,9 +134,9 @@ module Legion
               runner_class = Helpers::Wiring.resolve_runner_class(mapping[:ext], mapping[:runner])
               if runner_class
                 instances[key] = Helpers::RunnerHost.new(runner_class)
-                Legion::Logging.debug "[cortex] wired: #{mapping[:ext]}::#{mapping[:runner]}"
+                log.debug "[cortex] wired: #{mapping[:ext]}::#{mapping[:runner]}"
               else
-                Legion::Logging.debug "[cortex] skipped: #{mapping[:ext]}::#{mapping[:runner]} (not loaded)"
+                log.debug "[cortex] skipped: #{mapping[:ext]}::#{mapping[:runner]} (not loaded)"
               end
             end
 
@@ -145,7 +145,7 @@ module Legion
 
           def wire_phase_handlers
             @phase_handlers = Helpers::Wiring.build_phase_handlers(runner_instances)
-            Legion::Logging.info "[cortex] phase handlers built: #{@phase_handlers.keys.join(', ')}"
+            log.info "[cortex] phase handlers built: #{@phase_handlers.keys.join(', ')}"
           end
         end
       end

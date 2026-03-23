@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.2] - 2026-03-22
+
+### Changed
+- Add legion-* sub-gems as runtime dependencies (legion-cache, legion-crypt, legion-data, legion-json, legion-logging, legion-settings, legion-transport)
+- Replace direct `Legion::Logging.*` calls with injected `log` helper in runners/cortex.rb
+- Update spec_helper with real sub-gem helper stubs and Helpers::Lex module
+- Remove Legion::Logging stub_const blocks from runner and integration specs (real helper now available)
+
 ## [0.2.1] - 2026-03-17
 
 ### Fixed
